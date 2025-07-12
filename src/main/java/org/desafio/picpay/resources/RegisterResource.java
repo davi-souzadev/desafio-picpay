@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import org.desafio.picpay.dto.UserRequestDTO;
 import org.desafio.picpay.exception.CnpjNotFoundException;
 import org.desafio.picpay.exception.InvalidUserTypeException;
+import org.desafio.picpay.exception.UserNotFoundException;
 import org.desafio.picpay.service.RegisterService;
 
 import java.util.Map;

@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 import org.desafio.picpay.dto.TransactionRequestDTO;
 import org.desafio.picpay.exception.InsufficientAmountException;
 import org.desafio.picpay.exception.InvalidAmountException;
+import org.desafio.picpay.exception.UserNotFoundException;
 import org.desafio.picpay.exception.UserTypeTransactionNotAllowed;
 import org.desafio.picpay.service.TransactionService;
 
@@ -33,6 +34,8 @@ public class TransactionResource {
             return Response.ok(transactionService.create(transactionRequestDTO)).build();
         } catch (UserTypeTransactionNotAllowed | InvalidAmountException | InsufficientAmountException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(Map.of("error", e.getMessage())).build();
+        } catch (UserNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(Map.of("error", e.getMessage())).build();
         }
     }
 }
