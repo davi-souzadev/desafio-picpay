@@ -33,6 +33,7 @@ public class UserEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_type")
     private UserType userType;
 
     @CreationTimestamp

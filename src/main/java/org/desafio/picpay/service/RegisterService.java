@@ -71,4 +71,8 @@ public class RegisterService {
                 user.getUserType(),
                 wallet.getBalance());
     }
+    
+    public List<WalletEntity> getWallets() {
+        return walletRepository.findAll().list();
+    }
 }

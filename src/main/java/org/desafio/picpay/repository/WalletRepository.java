@@ -7,6 +7,6 @@ import org.desafio.picpay.entity.WalletEntity;
 @ApplicationScoped
 public class WalletRepository implements PanacheRepositoryBase<WalletEntity, Long> {
     public WalletEntity findByUserId(Long id) {
-        return (WalletEntity) find("user.id", id);
+        return (WalletEntity) find("userEntity.id", id).firstResult();
     }
 }

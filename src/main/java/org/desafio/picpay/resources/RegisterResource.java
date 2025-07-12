@@ -27,6 +27,12 @@ public class RegisterResource {
         return Response.ok(registerService.getAll()).build();
     }
 
+    @GET
+    @Path("/wallets")
+    public Response getWallets() {
+        return Response.ok(registerService.getWallets()).build();
+    }
+
     @POST
     @Transactional
     public Response create(@NotNull @Valid UserRequestDTO requestDTO) {
