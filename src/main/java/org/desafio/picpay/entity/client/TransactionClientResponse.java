@@ -1,4 +1,4 @@
-package org.desafio.picpay.entity;
+package org.desafio.picpay.entity.client;
 
 
 import jakarta.validation.constraints.Pattern;
@@ -23,5 +23,13 @@ public class TransactionClientResponse {
 
     public void setData(AuthorizationClientEntity data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionClientResponse{" +
+                "status='" + status + '\'' +
+                ", data=" + data.toString() +
+                '}';
     }
 }

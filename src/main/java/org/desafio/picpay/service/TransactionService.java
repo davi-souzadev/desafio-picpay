@@ -2,7 +2,7 @@ package org.desafio.picpay.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-//import org.desafio.picpay.client.MockiClient;
+import org.desafio.picpay.client.MockiClient;
 import org.desafio.picpay.dto.TransactionRequestDTO;
 import org.desafio.picpay.entity.*;
 import org.desafio.picpay.exception.InsufficientAmountException;
@@ -20,25 +20,29 @@ public class TransactionService {
     TransactionRepository transactionRepository;
     UserRepository userRepository;
     WalletRepository walletRepository;
-//    MockiClient mockiClient;
+    MockiClient mockiClient;
 
     @Inject
     public TransactionService(TransactionRepository transactionRepository,
                               UserRepository userRepository,
-                              WalletRepository walletRepository
-//                              @RestClient MockiClient mockiClient
+                              WalletRepository walletRepository,
+                              @RestClient MockiClient mockiClient
     ) {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.walletRepository = walletRepository;
-//        this.mockiClient = mockiClient;
+        this.mockiClient = mockiClient;
     }
 
-//    private boolean authorizeTransaction() {
-//        var response = mockiClient.authorize();
-//
-//        return response.getStatus().equalsIgnoreCase("success");
-//    }
+    private boolean authorizeTransaction() {
+        var response = mockiClient.authorize();
+        System.out.println(response.toString());
+        return response.getStatus().equalsIgnoreCase("success");
+    }
+
+    private void sendNotification() {
+        mockiClient.notifyClient();
+    }
 
     public TransactionEntity create(TransactionRequestDTO transactionRequestDTO) {
         UserEntity payer = userRepository.findById(transactionRequestDTO.payer);
@@ -59,9 +63,9 @@ public class TransactionService {
             throw new InsufficientAmountException("Saldo insuficiente!");
         }
 
-//        if(!authorizeTransaction()) {
-//            throw new NotAuthorizedTransactionException("Transação não autorizada");
-//        }
+        if(!authorizeTransaction()) {
+            throw new NotAuthorizedTransactionException("Transação não autorizada");
+        }
 
         var transactionAmount = transactionRequestDTO.amount;
         payerWallet.setBalance(payerWallet.getBalance() - transactionAmount);
@@ -76,6 +80,8 @@ public class TransactionService {
         transactionEntity.setStatus(TransactionStatus.COMPLETED);
         transactionEntity.setExternalAuthorization(true);
         transactionRepository.persist(transactionEntity);
+
+        sendNotification();
 
         return transactionEntity;
     }
